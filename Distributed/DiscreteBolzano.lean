@@ -67,9 +67,9 @@ theorem discrete_bolzano {d : ℕ} (hf : Lipschitz d f) (h_pos : ∃ n, f n > 0)
   have : n_neg = n_pos + nd
   · grind
   clear_value nd
-  simp only [this] at *
+  subst this
   lift nd to ℕ using show 0 ≤ nd by grind
-  clear n_ord n_neg -- remove unnecessary objects
+  clear n_ord -- remove unnecessary hypotheses
 
   induction' nd with nd ih generalizing n_pos
   · grind
@@ -87,10 +87,11 @@ theorem discrete_bolzano {d : ℕ} (hf : Lipschitz d f) (h_pos : ∃ n, f n > 0)
         rw [lt_abs] at h
         grind
       ·
-        have := hf (n_pos + nd)
-        simp [abs_le] at this
         apply lt_of_le_of_ne at hf_pos_nd
         specialize hf_pos_nd (by grind)
+
+        have := hf (n_pos + nd)
+        simp [abs_le] at this
         apply And.right at this
         rw [Int.add_assoc] at this
         grw [hfn_neg] at this
